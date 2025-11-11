@@ -119,7 +119,7 @@ nav {
 }
 
 .nav-links a::after {
-  content: '';
+  content: "";
   position: absolute;
   bottom: -4px;
   left: 0;
@@ -199,7 +199,7 @@ nav {
 }
 
 .hero::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: 0;
@@ -407,7 +407,7 @@ textarea:focus {
 }
 
 .job-card::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: 0;
@@ -535,7 +535,7 @@ textarea:focus {
 }
 
 .feature-list li::before {
-  content: '✓';
+  content: "✓";
   position: absolute;
   left: 0;
   color: var(--accent);
@@ -756,21 +756,21 @@ select.invalid {
     gap: 2rem;
     text-align: center;
   }
-  
+
   .hero h1 {
     font-size: 2.25rem;
   }
-  
+
   .hero-stats {
     flex-direction: row;
     justify-content: center;
     width: 100%;
   }
-  
+
   .contact-container {
     grid-template-columns: 1fr;
   }
-  
+
   .features-grid {
     grid-template-columns: 1fr;
   }
@@ -780,7 +780,7 @@ select.invalid {
   .mobile-menu-btn {
     display: block;
   }
-  
+
   .nav-links {
     position: fixed;
     top: 70px;
@@ -794,50 +794,50 @@ select.invalid {
     box-shadow: 0 10px 30px var(--shadow);
     z-index: 999;
   }
-  
+
   .nav-links.active {
     left: 0;
   }
-  
+
   .nav-links li {
     width: 100%;
     text-align: center;
   }
-  
+
   .nav-links a {
     display: block;
     padding: 1rem;
   }
-  
+
   .carousel-btn {
     display: none;
   }
-  
+
   .team-track {
     overflow-x: auto;
     scrollbar-width: thin;
   }
-  
+
   .jobs-grid {
     grid-template-columns: 1fr;
   }
-  
+
   .form-grid {
     grid-template-columns: 1fr;
   }
-  
+
   .hero {
     padding: 3rem 1.5rem;
   }
-  
+
   h2 {
     font-size: 1.75rem;
   }
-  
+
   .search-actions {
     justify-content: stretch;
   }
-  
+
   .search-actions button {
     flex: 1;
   }
@@ -847,26 +847,26 @@ select.invalid {
   .hero h1 {
     font-size: 1.75rem;
   }
-  
+
   .hero p {
     font-size: 1rem;
   }
-  
+
   .hero-buttons {
     flex-direction: column;
     width: 100%;
   }
-  
+
   .hero-buttons a {
     width: 100%;
     text-align: center;
   }
-  
+
   .hero-stats {
     flex-direction: column;
     width: 100%;
   }
-  
+
   .stat-card {
     width: 100%;
   }
