@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Todas as Vagas | Vagas ETE</title>
+  <link rel="stylesheet" href="../css/vagas.css" />
+  <link rel="stylesheet" href="/css/estilo.css" />
+</head>
+<body>
+  <header>
+    <nav>
+      <div class="logo">
+        <svg viewBox="0 0 24 24"><path d="M20 6h-4V4c0-1.11-.89-2-2-2h-4c-1.11 0-2 .89-2 2v2H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-6 0h-4V4h4v2z"/></svg>
+        <span>Vagas ETE</span>
+      </div>
+      <ul class="nav-links">
+        <li><a href="../index.html#home">Início</a></li>
+        <li><a href="../index.html#sobre">Sobre</a></li>
+        <li><a href="../index.html#contato">Contato</a></li>
+        <li><a href="#entrar">Entrar</a></li>
+        <li><a href="#" onclick="openModal('registerModal')" class="btn-primary" style="color: white; padding-right: 28px;"><span class="nav-icon"></span><span
+              class="nav-text">Cadastrar</span></a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <section id="vagas">
+      <h2>Vagas Disponíveis</h2>
+
+      <div class="search-form">
+        <!-- Filtros (reutilizados do index.html) -->
+        <form id="searchForm">
+          <div class="form-grid">
+            <!-- Vaga -->
+            <div class="form-group">
+              <label for="qVaga">Vaga</label>
+              <input id="qVaga" type="text" placeholder="Ex: Desenvolvedor" />
+            </div>
+            <!-- Local -->
+            <div class="form-group">
+              <label for="qLocal">Localização</label>
+              <input id="qLocal" type="text" placeholder="Cidade" />
+            </div>
+            <!-- Contrato -->
+            <div class="form-group">
+              <label for="qContrato">Tipo de Contrato</label>
+              <select id="qContrato">
+                <option value="">Todos</option>
+                <option>CLT</option>
+                <option>PJ</option>
+                <option>Estágio</option>
+              </select>
+            </div>
+            <!-- Modalidade -->
+            <div class="form-group">
+              <label for="qModalidade">Modalidade</label>
+              <select id="qModalidade">
+                <option value="">Todas</option>
+                <option>Presencial</option>
+                <option>Remoto</option>
+                <option>Híbrido</option>
+              </select>
+            </div>
+            <!-- Área -->
+            <div class="form-group">
+              <label for="qArea">Área</label>
+              <input id="qArea" type="text" placeholder="Ex: Tecnologia" />
+            </div>
+            <!-- Experiência -->
+            <div class="form-group">
+              <label for="qExp">Experiência</label>
+              <select id="qExp">
+                <option value="">Todas</option>
+                <option>Júnior</option>
+                <option>Pleno</option>
+                <option>Sênior</option>
+              </select>
+            </div>
+            <!-- Salário -->
+            <div class="form-group">
+              <label for="qSalMin">Salário mín.</label>
+              <input id="qSalMin" type="number" min="0" placeholder="R$ 0,00" />
+            </div>
+            <div class="form-group">
+              <label for="qSalMax">Salário máx.</label>
+              <input id="qSalMax" type="number" min="0" placeholder="R$ 0,00" />
+            </div>
+          </div>
+
+          <div class="search-actions">
+            <button type="submit" class="btn-primary">Buscar</button>
+            <button type="button" id="resetFilters" class="btn-secondary">Limpar</button>
+          </div>
+        </form>
+      </div>
+
+      <p id="foundCount" style="text-align: center; color: var(--text-secondary); margin-top: 1rem;">
+        Carregando vagas...
+      </p>
+
+      <div id="jobsList" class="jobs-grid" aria-live="polite" aria-label="Lista de vagas"></div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="footer-content">
+      <div class="footer-section">
+        <h3>Sobre</h3>
+        <p>Vagas ETE conecta talentos às oportunidades certas.</p>
+      </div>
+      <div class="footer-section">
+        <h3>Links</h3>
+        <ul class="footer-links">
+          <li><a href="../index.html#home">Início</a></li>
+          <li><a href="../index.html#sobre">Sobre</a></li>
+          <li><a href="../index.html#contato">Contato</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      &copy; 2025 Vagas ETE - Todos os direitos reservados.
+    </div>
+  </footer>
+
+  <script src="../js/vagas.js"></script>
+  <script src="/js/script.js"></script>
+</body>
+</html>

@@ -1,268 +1,188 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta
-      name="description"
-      content="Vagas ETE - Conectando talentos às melhores oportunidades de trabalho"
-    />
-    <title>Vagas ETE - Espaço de Talentos e Empregos</title>
-    <link rel="stylesheet" href="./css/estilo.css" />
-  </head>
-  <body>
-    <header>
-      <nav>
-        <a href="index.html" style="text-decoration: none"
-          ><div class="logo" aria-label="Vagas ETE">
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-              <path
-                d="M20 6h-4V4c0-1.11-.89-2-2-2h-4c-1.11 0-2 .89-2 2v2H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-6 0h-4V4h4v2z"
-              />
-            </svg>
-            <span>Vagas ETE</span>
-          </div></a
-        >
 
-        <button
-          class="mobile-menu-btn"
-          aria-label="Abrir menu"
-          onclick="toggleMenu()"
-        >
-          ☰
-        </button>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Vagas ETE - Conectando talentos às melhores oportunidades de trabalho" />
+  <title>Vagas ETE - Espaço de Talentos e Empregos</title>
+  <link rel="stylesheet" href="./css/estilo.css" />
+</head>
 
-        <ul class="nav-links" id="navLinks" role="menubar">
-          <li><a href="#home">Início</a></li>
-          <li><a href="#vagas">Vagas</a></li>
-          <li><a href="#sobre">Sobre</a></li>
-          <li><a href="#contato">Contato</a></li>
-          <li><a href="login.html">Entrar</a></li>
-          <li>
-            <button
-              class="theme-toggle"
-              id="themeToggle"
-              onclick="toggleTheme()"
-              aria-label="Alternar tema"
-            >
-              ☀️
-            </button>
-          </li>
-        </ul>
-      </nav>
-    </header>
+<body>
+  <header>
+    <nav>
+      <div class="logo" aria-label="Vagas ETE">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path
+            d="M20 6h-4V4c0-1.11-.89-2-2-2h-4c-1.11 0-2 .89-2 2v2H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-6 0h-4V4h4v2z" />
+        </svg>
+        <span>Vagas ETE</span>
+      </div>
 
-    <section class="hero" id="home" aria-labelledby="hero-title">
-      <div class="hero-content">
-        <div class="hero-text">
-          <h1 id="hero-title">Encontre Sua Próxima Oportunidade</h1>
-          <p>Conectamos os melhores talentos às melhores empresas</p>
-          <div class="hero-buttons">
-            <a href="#vagas" class="btn-primary">Buscar Vagas</a>
-            <a href="#cadastrar" class="btn-secondary">Cadastrar-se</a>
-          </div>
-        </div>
 
-        <div class="hero-stats" role="list" aria-label="Estatísticas">
-          <div class="stat-card" role="listitem">
-            <span class="stat-number" id="stat-vagas">5</span>
-            <span class="stat-label">Vagas Ativas</span>
-          </div>
-          <div class="stat-card" role="listitem">
-            <span class="stat-number">350+</span>
-            <span class="stat-label">Empresas</span>
-          </div>
-          <div class="stat-card" role="listitem">
-            <span class="stat-number">5,832</span>
-            <span class="stat-label">Candidatos</span>
-          </div>
+
+      <ul class="nav-links" id="navLinks" role="menubar">
+        <li><a href="#home"><span class="nav-icon"></span><span class="nav-text">Início</span></a></li>
+        <li><a href="./html/vagas1.html"><span class="nav-icon"></span><span class="nav-text">Vagas</span></a></li>
+        <li><a href="#sobre"><span class="nav-icon"></span><span class="nav-text">Sobre</span></a></li>
+        <li><a href="#contato"><span class="nav-icon"></span><span class="nav-text">Contato</span></a></li>
+        <li><a href="#" onclick="openModal('loginModal')"><span class="nav-icon"></span><span
+              class="nav-text">Entrar</span></a></li>
+        <li><a href="#" onclick="openModal('registerModal')" class="btn-primary" style="color: white; padding-right: 28px;"><span class="nav-icon"></span><span
+              class="nav-text">Cadastrar</span></a></li>
+        <li>
+          <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" aria-label="Alternar tema">
+            ☀️
+          </button>
+        </li>
+      </ul>
+    </nav>
+  </header>
+
+  <section class="hero" id="home" aria-labelledby="hero-title">
+    <div class="hero-content">
+      <div class="hero-text">
+        <h1 id="hero-title">Encontre Sua Próxima Oportunidade</h1>
+        <p>Conectamos os melhores talentos às melhores empresas</p>
+        <div class="hero-buttons">
+          <a href="./html/vagas1.html" class="btn-primary">Buscar Vagas</a>
+          <a href="#" onclick="openModal('registerModal')" class="btn-secondary">Cadastrar-se</a>
         </div>
       </div>
-    </section>
 
-    <main>
-      <section id="vagas">
-        <h2>Buscar Vagas</h2>
-        <div class="search-form" id="searchFormContainer">
-          <form id="searchForm" aria-label="Formulário de busca de vagas">
-            <div class="form-grid">
-              <div class="form-group">
-                <label for="qVaga">Vaga</label>
-                <input id="qVaga" type="text" placeholder="Ex: Desenvolvedor" />
-              </div>
-              <div class="form-group">
-                <label for="qLocal">Localização</label>
-                <input id="qLocal" type="text" placeholder="Cidade" />
-              </div>
-              <div class="form-group">
-                <label for="qContrato">Tipo de Contrato</label>
-                <select id="qContrato">
-                  <option value="">Todos</option>
-                  <option>CLT</option>
-                  <option>PJ</option>
-                  <option>Estágio</option>
-                </select>
-              </div>
-              <div class="form-group">
-                <label for="qModalidade">Modalidade</label>
-                <select id="qModalidade">
-                  <option value="">Todas</option>
-                  <option>Presencial</option>
-                  <option>Remoto</option>
-                  <option>Híbrido</option>
-                </select>
-              </div>
-              <div class="form-group">
-                <label for="qArea">Área</label>
-                <input id="qArea" type="text" placeholder="Ex: Tecnologia" />
-              </div>
-              <div class="form-group">
-                <label for="qExp">Experiência</label>
-                <select id="qExp">
-                  <option value="">Todas</option>
-                  <option>Júnior</option>
-                  <option>Pleno</option>
-                  <option>Sênior</option>
-                </select>
-              </div>
-              <div class="form-group">
-                <label for="qSalMin">Salário mín.</label>
-                <input
-                  id="qSalMin"
-                  type="number"
-                  min="0"
-                  placeholder="R$ 0,00"
-                />
-              </div>
-              <div class="form-group">
-                <label for="qSalMax">Salário máx.</label>
-                <input
-                  id="qSalMax"
-                  type="number"
-                  min="0"
-                  placeholder="R$ 0,00"
-                />
-              </div>
-            </div>
-
-            <div class="search-actions">
-              <button type="submit" class="btn-primary">Buscar</button>
-              <button type="button" id="resetFilters" class="btn-secondary">
-                Limpar
-              </button>
-            </div>
-          </form>
+      <div class="hero-stats" role="list" aria-label="Estatísticas">
+        <div class="stat-card" role="listitem">
+          <span class="stat-number" id="stat-vagas">5</span>
+          <span class="stat-label">Vagas Ativas</span>
         </div>
+        <div class="stat-card" role="listitem">
+          <span class="stat-number">350+</span>
+          <span class="stat-label">Empresas</span>
+        </div>
+        <div class="stat-card" role="listitem">
+          <span class="stat-number">5,832</span>
+          <span class="stat-label">Candidatos</span>
+        </div>
+      </div>
+    </div>
+  </section>
 
-        <p
-          id="foundCount"
-          style="
+  <main>
+    <section id="vagas">
+      <!-- <h2>Buscar Vagas</h2>
+      <div class="search-form" id="searchFormContainer">
+        <form id="searchForm" aria-label="Formulário de busca de vagas">
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="qVaga">Vaga</label>
+              <input id="qVaga" type="text" placeholder="Ex: Desenvolvedor" />
+            </div>
+            <div class="form-group">
+              <label for="qLocal">Localização</label>
+              <input id="qLocal" type="text" placeholder="Cidade" />
+            </div>
+            <div class="form-group">
+              <label for="qContrato">Tipo de Contrato</label>
+              <select id="qContrato">
+                <option value="">Todos</option>
+                <option>CLT</option>
+                <option>PJ</option>
+                <option>Estágio</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="qModalidade">Modalidade</label>
+              <select id="qModalidade">
+                <option value="">Todas</option>
+                <option>Presencial</option>
+                <option>Remoto</option>
+                <option>Híbrido</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="qArea">Área</label>
+              <input id="qArea" type="text" placeholder="Ex: Tecnologia" />
+            </div>
+            <div class="form-group">
+              <label for="qExp">Experiência</label>
+              <select id="qExp">
+                <option value="">Todas</option>
+                <option>Júnior</option>
+                <option>Pleno</option>
+                <option>Sênior</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="qSalMin">Salário mín.</label>
+              <input id="qSalMin" type="number" min="0" placeholder="R$ 0,00" />
+            </div>
+            <div class="form-group">
+              <label for="qSalMax">Salário máx.</label>
+              <input id="qSalMax" type="number" min="0" placeholder="R$ 0,00" />
+            </div>
+          </div>
+
+          <div class="search-actions">
+            <button type="submit" class="btn-primary">Buscar</button>
+            <button type="button" id="resetFilters" class="btn-secondary">
+              Limpar
+            </button>
+          </div>
+        </form>
+      </div> -->
+
+      <!-- <p id="foundCount" style="
             text-align: center;
             color: var(--text-secondary);
             margin-top: 1rem;
-          "
-        >
-          Carregando vagas...
+          ">
+        Carregando vagas...
+      </p> -->
+
+      <div id="jobsList" class="jobs-grid" aria-live="polite" aria-label="Lista de vagas"></div>
+    </section>
+
+    <section id="sobre">
+      <br>
+      <h2>Sobre o Vagas ETE</h2>
+      <div style="max-width: 100%; text-align: center; margin-top: 20px;">
+        <p style="font-size: 1.1rem; color: var(--text-secondary)">
+          O Vagas ETE é o seu ponto de partida para o próximo grande passo na carreira. Nossa plataforma foi criada com um propósito claro: conectar os melhores talentos – profissionais dedicados, criativos e qualificados – às melhores oportunidades do mercado. Acreditamos que a carreira certa está esperando pelo talento certo, e nós trabalhamos para tornar esse encontro uma realidade, impulsionando futuros e construindo trajetórias de sucesso.
         </p>
+      </div>
+      <div style="text-align: center; margin-top: 2rem">
+        <a href="./html/vagas1.html" class="btn-primary" id="viewAllBtn">Visualizar Vagas</a>
+      </div>
+      <br>
 
-        <div
-          id="jobsList"
-          class="jobs-grid"
-          aria-live="polite"
-          aria-label="Lista de vagas"
-        ></div>
-
-        <div style="text-align: center; margin-top: 2rem">
-          <a href="#vagas" class="btn-primary" id="viewAllBtn"
-            >Ver Todas as Vagas</a
-          >
+      <h3 style="text-align: center; font-weight: 800; margin-bottom: 2rem; font-size: 2.25rem">
+        Como Funciona
+      </h3>
+      <div class="features-grid">
+        <div class="feature-card">
+          <h3>Para Candidatos</h3>
+          <ul class="feature-list">
+            <li>Cadastro gratuito e rápido</li>
+            <li>Busca avançada por vagas</li>
+            <li>Upload de currículo</li>
+            <li>Candidatura simples</li>
+            <li>Acompanhamento de candidaturas</li>
+          </ul>
         </div>
-      </section>
-
-      <section id="sobre">
-        <h2>Sobre o Vagas ETE</h2>
-        <div style="max-width: 800px; margin: 0 auto 3rem; text-align: center">
-          <h3 style="margin-bottom: 1rem; font-size: 2rem">Nossa Missão</h3>
-          <p style="font-size: 1.1rem; color: var(--text-secondary)">
-            O Vagas ETE é uma plataforma dedicada a conectar os melhores
-            talentos às melhores oportunidades de trabalho.
-          </p>
+        <div class="feature-card">
+          <h3>Para Empresas</h3>
+          <ul class="feature-list">
+            <li>Publicação de vagas</li>
+            <li>Gestão de candidaturas</li>
+            <li>Filtros personalizados</li>
+            <li>Acesso aos perfis de candidatos</li>
+            <li>Sistema de comunicação</li>
+          </ul>
         </div>
+      </div>
 
-        <h3 style="text-align: center; margin-bottom: 2rem; font-size: 2rem">
-          Como Funciona
-        </h3>
-        <div class="features-grid">
-          <div class="feature-card">
-            <h3>Para Candidatos</h3>
-            <ul class="feature-list">
-              <li>Cadastro gratuito e rápido</li>
-              <li>Busca avançada por vagas</li>
-              <li>Upload de currículo</li>
-              <li>Candidatura simples</li>
-              <li>Acompanhamento de candidaturas</li>
-            </ul>
-          </div>
-          <div class="feature-card">
-            <h3>Para Empresas</h3>
-            <ul class="feature-list">
-              <li>Publicação de vagas</li>
-              <li>Gestão de candidaturas</li>
-              <li>Filtros personalizados</li>
-              <li>Acesso aos perfis de candidatos</li>
-              <li>Sistema de comunicação</li>
-            </ul>
-          </div>
-        </div>
 
-        <h3 style="text-align: center; margin: 4rem 0 2rem; font-size: 2rem">
-          Nossa Equipe
-        </h3>
-
-        <div
-          class="team-carousel"
-          id="teamCarousel"
-          aria-label="Carrossel da equipe"
-        >
-          <button class="carousel-btn prev" id="teamPrev" aria-label="Anterior">
-            ‹
-          </button>
-
-          <div class="team-viewport">
-            <div class="team-track" id="teamTrack" tabindex="0">
-              <div class="team-member">
-                <div class="member-avatar">JS</div>
-                <h3>João Silva</h3>
-                <p style="color: var(--text-secondary)">CEO & Fundador</p>
-              </div>
-              <div class="team-member">
-                <div class="member-avatar">MS</div>
-                <h3>Maria Santos</h3>
-                <p style="color: var(--text-secondary)">CTO</p>
-              </div>
-              <div class="team-member">
-                <div class="member-avatar">PC</div>
-                <h3>Pedro Costa</h3>
-                <p style="color: var(--text-secondary)">Designer</p>
-              </div>
-              <div class="team-member">
-                <div class="member-avatar">AL</div>
-                <h3>Ana Lima</h3>
-                <p style="color: var(--text-secondary)">Marketing</p>
-              </div>
-              <div class="team-member">
-                <div class="member-avatar">CR</div>
-                <h3>Carlos Rocha</h3>
-                <p style="color: var(--text-secondary)">Desenvolvedor</p>
-              </div>
-            </div>
-          </div>
-
-          <button class="carousel-btn next" id="teamNext" aria-label="Próximo">
-            ›
-          </button>
-        </div>
-      </section>
 
       <section id="contato">
         <h2>Entre em Contato</h2>
@@ -298,49 +218,25 @@
             <form id="contactForm" novalidate>
               <div class="form-group">
                 <label for="contactName">Nome</label>
-                <input
-                  id="contactName"
-                  type="text"
-                  placeholder="Seu nome completo"
-                  required
-                />
+                <input id="contactName" type="text" placeholder="Seu nome completo" required />
                 <small class="error-message" data-for="contactName"></small>
               </div>
               <div class="form-group">
                 <label for="contactEmail">Email</label>
-                <input
-                  id="contactEmail"
-                  type="email"
-                  placeholder="seu@email.com"
-                  required
-                />
+                <input id="contactEmail" type="email" placeholder="seu@email.com" required />
                 <small class="error-message" data-for="contactEmail"></small>
               </div>
               <div class="form-group">
                 <label for="contactSubject">Assunto</label>
-                <input
-                  id="contactSubject"
-                  type="text"
-                  placeholder="Sobre o que você quer falar?"
-                  required
-                />
+                <input id="contactSubject" type="text" placeholder="Sobre o que você quer falar?" required />
                 <small class="error-message" data-for="contactSubject"></small>
               </div>
               <div class="form-group">
                 <label for="contactMessage">Mensagem</label>
-                <textarea
-                  id="contactMessage"
-                  rows="5"
-                  placeholder="Escreva sua mensagem aqui..."
-                  required
-                ></textarea>
+                <textarea id="contactMessage" rows="5" placeholder="Escreva sua mensagem aqui..." required></textarea>
                 <small class="error-message" data-for="contactMessage"></small>
               </div>
-              <button
-                type="submit"
-                class="btn-primary"
-                style="width: 100%; margin-top: 1rem"
-              >
+              <button type="submit" class="btn-primary" style="width: 100%; margin-top: 1rem">
                 Enviar Mensagem
               </button>
             </form>
@@ -348,162 +244,150 @@
         </div>
       </section>
 
-      <section id="entrar" class="hidden" aria-hidden="true">
+
+  </main>
+
+  <!-- Bottom Navigation for Mobile -->
+  <nav class="bottom-nav" id="bottomNav">
+    <a href="#home" class="bottom-nav-item" data-tooltip="Início">
+      <span class="bottom-nav-icon">🏠</span>
+    </a>
+    <a href="#vagas" class="bottom-nav-item" data-tooltip="Vagas">
+      <span class="bottom-nav-icon">💼</span>
+    </a>
+    <a href="#sobre" class="bottom-nav-item" data-tooltip="Sobre">
+      <span class="bottom-nav-icon">ℹ️</span>
+    </a>
+    <a href="#contato" class="bottom-nav-item" data-tooltip="Contato">
+      <span class="bottom-nav-icon">📞</span>
+    </a>
+    <a href="#" onclick="openModal('loginModal')" class="bottom-nav-item" data-tooltip="Entrar">
+      <span class="bottom-nav-icon">👤</span>
+    </a>
+    <a href="#" onclick="openModal('registerModal')" class="bottom-nav-item bottom-nav-primary"
+      data-tooltip="Cadastrar">
+      <span class="bottom-nav-icon">✨</span>
+    </a>
+  </nav>
+
+  <footer>
+    <div class="footer-content">
+      <div class="footer-section">
+        <h3>Vagas ETE</h3>
+        <p style="color: var(--text-secondary)">
+          Conectando talentos e oportunidades
+        </p>
+      </div>
+      <div class="footer-section">
+        <h3>Links</h3>
+        <ul class="footer-links">
+          <li><a href="./html/vagas1.html">Vagas</a></li>
+          <li><a href="#sobre">Sobre</a></li>
+          <li><a href="#contato">Contato</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2025 Vagas ETE. Todos os direitos reservados.</p>
+    </div>
+  </footer>
+
+  <!-- Modal de Login -->
+  <div id="loginModal" class="modal" aria-hidden="true">
+    <div class="modal-overlay" onclick="closeModal('loginModal')"></div>
+    <div class="modal-content">
+      <div class="modal-header">
         <h2>Entrar</h2>
-        <div style="max-width: 400px; margin: 0 auto">
-          <div class="search-form">
-            <form id="loginForm" novalidate>
-              <div class="form-group">
-                <label for="loginEmail">Email</label>
-                <input
-                  id="loginEmail"
-                  type="email"
-                  placeholder="seu@email.com"
-                  required
-                />
-                <small class="error-message" data-for="loginEmail"></small>
-              </div>
-              <div class="form-group">
-                <label for="loginPassword">Senha</label>
-                <input
-                  id="loginPassword"
-                  type="password"
-                  placeholder="Sua senha"
-                  required
-                  minlength="6"
-                />
-                <small class="error-message" data-for="loginPassword"></small>
-              </div>
-              <button
-                type="submit"
-                class="btn-primary"
-                style="width: 100%; margin-top: 1rem"
-              >
-                Entrar
-              </button>
-              <p
-                style="
-                  text-align: center;
-                  margin-top: 1rem;
-                  color: var(--text-secondary);
-                "
-              >
-                Não tem uma conta?
-                <a href="#cadastrar" style="color: var(--accent)"
-                  >Cadastre-se</a
-                >
-              </p>
-            </form>
+        <button class="modal-close" onclick="closeModal('loginModal')" aria-label="Fechar">×</button>
+      </div>
+      <div class="modal-body">
+        <form id="loginForm" novalidate>
+          <div class="form-group">
+            <label for="loginEmail">Email</label>
+            <input id="loginEmail" type="email" placeholder="seu@email.com" required />
+            <small class="error-message" data-for="loginEmail"></small>
           </div>
-        </div>
-      </section>
-
-      <section id="cadastrar" class="hidden" aria-hidden="true">
-        <h2>Cadastrar-se</h2>
-        <div style="max-width: 500px; margin: 0 auto">
-          <div class="search-form">
-            <form id="registerForm" novalidate>
-              <div class="form-group">
-                <label for="userType">Tipo de Usuário</label>
-                <select id="userType">
-                  <option>Candidato</option>
-                  <option>Empresa</option>
-                </select>
-              </div>
-              <div class="form-group">
-                <label for="fullName">Nome Completo</label>
-                <input
-                  id="fullName"
-                  type="text"
-                  placeholder="Seu nome completo"
-                  required
-                />
-                <small class="error-message" data-for="fullName"></small>
-              </div>
-              <div class="form-group">
-                <label for="regEmail">Email</label>
-                <input
-                  id="regEmail"
-                  type="email"
-                  placeholder="seu@email.com"
-                  required
-                />
-                <small class="error-message" data-for="regEmail"></small>
-              </div>
-              <div class="form-group">
-                <label for="regPhone">Telefone</label>
-                <input
-                  id="regPhone"
-                  type="tel"
-                  placeholder="(00) 00000-0000"
-                  required
-                />
-                <small class="error-message" data-for="regPhone"></small>
-              </div>
-              <div class="form-group">
-                <label for="regLocation">Localização</label>
-                <input
-                  id="regLocation"
-                  type="text"
-                  placeholder="Cidade, Estado"
-                />
-              </div>
-              <div class="form-group">
-                <label for="regPassword">Senha</label>
-                <input
-                  id="regPassword"
-                  type="password"
-                  placeholder="Crie uma senha"
-                  required
-                  minlength="6"
-                />
-                <small class="error-message" data-for="regPassword"></small>
-              </div>
-              <button
-                type="submit"
-                class="btn-primary"
-                style="width: 100%; margin-top: 1rem"
-              >
-                Cadastrar
-              </button>
-              <p
-                style="
-                  text-align: center;
-                  margin-top: 1rem;
-                  color: var(--text-secondary);
-                "
-              >
-                Já tem uma conta?
-                <a href="#entrar" style="color: var(--accent)">Entre</a>
-              </p>
-            </form>
+          <div class="form-group">
+            <label for="loginPassword">Senha</label>
+            <input id="loginPassword" type="password" placeholder="Sua senha" required minlength="6" />
+            <small class="error-message" data-for="loginPassword"></small>
           </div>
-        </div>
-      </section>
-    </main>
-
-    <footer>
-      <div class="footer-content">
-        <div class="footer-section">
-          <h3>Vagas ETE</h3>
-          <p style="color: var(--text-secondary)">
-            Conectando talentos e oportunidades
+          <button type="submit" class="btn-primary" style="width: 100%; margin-top: 1rem">
+            Entrar
+          </button>
+          <p style="
+                text-align: center;
+                margin-top: 1rem;
+                color: var(--text-secondary);
+              ">
+            Não tem uma conta?
+            <a href="#" onclick="closeModal('loginModal'); openModal('registerModal')"
+              style="color: var(--accent)">Cadastre-se</a>
           </p>
-        </div>
-        <div class="footer-section">
-          <h3>Links</h3>
-          <ul class="footer-links">
-            <li><a href="#vagas">Vagas</a></li>
-            <li><a href="#sobre">Sobre</a></li>
-            <li><a href="#contato">Contato</a></li>
-          </ul>
-        </div>
+        </form>
       </div>
-      <div class="footer-bottom">
-        <p>© 2025 Vagas ETE. Todos os direitos reservados.</p>
-      </div>
-    </footer>
+    </div>
+  </div>
 
-    <script src="./js/script.js"></script>
-  </body>
+  <!-- Modal de Cadastro -->
+  <div id="registerModal" class="modal" aria-hidden="true">
+    <div class="modal-overlay" onclick="closeModal('registerModal')"></div>
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Cadastrar-se</h2>
+        <button class="modal-close" onclick="closeModal('registerModal')" aria-label="Fechar">×</button>
+      </div>
+      <div class="modal-body">
+        <form id="registerForm" novalidate>
+          <div class="form-group">
+            <label for="userType">Tipo de Usuário</label>
+            <select id="userType">
+              <option>Candidato</option>
+              <option>Empresa</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="fullName">Nome Completo</label>
+            <input id="fullName" type="text" placeholder="Seu nome completo" required />
+            <small class="error-message" data-for="fullName"></small>
+          </div>
+          <div class="form-group">
+            <label for="regEmail">Email</label>
+            <input id="regEmail" type="email" placeholder="seu@email.com" required />
+            <small class="error-message" data-for="regEmail"></small>
+          </div>
+          <div class="form-group">
+            <label for="regPhone">Telefone</label>
+            <input id="regPhone" type="tel" placeholder="(00) 00000-0000" required />
+            <small class="error-message" data-for="regPhone"></small>
+          </div>
+          <div class="form-group">
+            <label for="regLocation">Localização</label>
+            <input id="regLocation" type="text" placeholder="Cidade, Estado" />
+          </div>
+          <div class="form-group">
+            <label for="regPassword">Senha</label>
+            <input id="regPassword" type="password" placeholder="Crie uma senha" required minlength="6" />
+            <small class="error-message" data-for="regPassword"></small>
+          </div>
+          <button type="submit" class="btn-primary" style="width: 100%; margin-top: 1rem">
+            Cadastrar
+          </button>
+          <p style="
+                text-align: center;
+                margin-top: 1rem;
+                color: var(--text-secondary);
+              ">
+            Já tem uma conta?
+            <a href="#" onclick="closeModal('registerModal'); openModal('loginModal')"
+              style="color: var(--accent)">Entre</a>
+          </p>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script src="./js/script.js"></script>
+</body>
+
 </html>

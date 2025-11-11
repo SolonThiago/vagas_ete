@@ -1,13 +1,12 @@
-/* ========== Inicialização do tema (sem localStorage) ========== */
+/* ========== Inicialização do tema ========== */
 (function initTheme() {
   const html = document.documentElement;
   // Tema padrão: light
-  let currentTheme = "light";
+  let currentTheme = localStorage.getItem('theme') || 'light';
 
   html.setAttribute("data-theme", currentTheme);
   const themeToggle = document.getElementById("themeToggle");
-  if (themeToggle)
-    themeToggle.textContent = currentTheme === "dark" ? "☀️" : "🌙";
+  if (themeToggle) themeToggle.textContent = currentTheme === "dark" ? "☀️" : "🌙";
 
   // Armazena tema em variável global para acesso
   window.currentTheme = currentTheme;
@@ -30,6 +29,7 @@ function toggleTheme() {
 
   html.setAttribute("data-theme", next);
   window.currentTheme = next;
+  localStorage.setItem('theme', next);
 
   const themeToggle = document.getElementById("themeToggle");
   if (themeToggle) {
@@ -37,12 +37,49 @@ function toggleTheme() {
   }
 }
 
+/* ========== Modal functions ========== */
+function openModal(modalId) {
+  const modal = document.getElementById(modalId);
+  if (modal) {
+    modal.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden'; // Prevent background scroll
+  }
+}
+
+function closeModal(modalId) {
+  const modal = document.getElementById(modalId);
+  if (modal) {
+    modal.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = ''; // Restore scroll
+  }
+}
+
+// Close modal when clicking outside or on close button
+document.addEventListener('click', function(e) {
+  if (e.target.classList.contains('modal-overlay') || e.target.classList.contains('modal-close')) {
+    const modal = e.target.closest('.modal');
+    if (modal) {
+      closeModal(modal.id);
+    }
+  }
+});
+
+// Close modal with ESC key
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') {
+    const openModal = document.querySelector('.modal[aria-hidden="false"]');
+    if (openModal) {
+      closeModal(openModal.id);
+    }
+  }
+});
+
 /* ========== Navegação com hash e controle de seções ========== */
 document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
   anchor.addEventListener("click", function (e) {
     e.preventDefault();
     const targetId = this.getAttribute("href").substring(1);
-
+    
     // Fechar menu mobile
     if (navLinks) {
       navLinks.classList.remove("active");
@@ -84,12 +121,7 @@ document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
 /* ========== Fechar menu ao clicar fora ========== */
 document.addEventListener("click", function (e) {
   const nav = document.querySelector("nav");
-  if (
-    nav &&
-    navLinks &&
-    !nav.contains(e.target) &&
-    navLinks.classList.contains("active")
-  ) {
+  if (nav && navLinks && !nav.contains(e.target) && navLinks.classList.contains("active")) {
     navLinks.classList.remove("active");
   }
 });
@@ -168,6 +200,19 @@ const jobs = [
     salary_max: 6500,
     description: "Garantir SLAs, KPIs e processos de qualidade.",
   },
+  {
+    id: 6,
+    title: "Estagiário de Logística",
+    company: "Logística Beta",
+    location: "Vitória de Santo Antão - PE",
+    contract: "Estágio",
+    modality: "Presencial",
+    area: "Logística",
+    experience: "Júnior",
+    salary_min: 900,
+    salary_max: 1200,
+    description: "Apoio operacional e controle de estoque.",
+  },
 ];
 
 /* ========== Elementos do DOM ========== */
@@ -208,9 +253,7 @@ function createJobCard(job) {
         <div class="job-company">${escapeHtml(job.company)}</div>
         <div class="job-title">${escapeHtml(job.title)}</div>
       </div>
-      <div class="job-salary">R$ ${formatCurrency(
-        job.salary_min
-      )} - ${formatCurrency(job.salary_max)}</div>
+      <div class="job-salary">R$ ${formatCurrency(job.salary_min)} - ${formatCurrency(job.salary_max)}</div>
     </div>
     <div class="job-meta">
       <span>📍 ${escapeHtml(job.location)}</span>
@@ -221,9 +264,7 @@ function createJobCard(job) {
       <span>•</span>
       <span>⭐ ${escapeHtml(job.experience)}</span>
     </div>
-    <p style="color:var(--text-secondary); margin-top:.6rem; font-size:.95rem; line-height: 1.5;">${escapeHtml(
-      job.description
-    )}</p>
+    <p style="color:var(--text-secondary); margin-top:.6rem; font-size:.95rem; line-height: 1.5;">${escapeHtml(job.description)}</p>
     <div class="job-actions">
       <button class="btn-apply" data-id="${job.id}">Candidatar-se</button>
     </div>
@@ -234,22 +275,20 @@ function createJobCard(job) {
 /* ========== Renderizar vagas ========== */
 function renderJobs(list) {
   if (!jobsList) return;
-
+  
   jobsList.innerHTML = "";
-
+  
   if (!list || list.length === 0) {
     if (foundCount) foundCount.textContent = "Nenhuma vaga encontrada.";
     return;
   }
-
+  
   const fragment = document.createDocumentFragment();
   list.forEach((j) => fragment.appendChild(createJobCard(j)));
   jobsList.appendChild(fragment);
-
+  
   if (foundCount) {
-    foundCount.textContent = `${list.length} vaga${
-      list.length !== 1 ? "s" : ""
-    } encontrada${list.length !== 1 ? "s" : ""}`;
+    foundCount.textContent = `${list.length} vaga${list.length !== 1 ? 's' : ''} encontrada${list.length !== 1 ? 's' : ''}`;
   }
 }
 
@@ -257,65 +296,57 @@ function renderJobs(list) {
 if (searchForm) {
   searchForm.addEventListener("submit", function (e) {
     e.preventDefault();
-
-    const qVaga =
-      document.getElementById("qVaga")?.value.trim().toLowerCase() || "";
-    const qLocal =
-      document.getElementById("qLocal")?.value.trim().toLowerCase() || "";
-    const qContrato = document.getElementById("qContrato")?.value || "";
-    const qModalidade = document.getElementById("qModalidade")?.value || "";
-    const qArea =
-      document.getElementById("qArea")?.value.trim().toLowerCase() || "";
-    const qExp = document.getElementById("qExp")?.value || "";
+    
+    const qVaga = document.getElementById("qVaga")?.value.trim().toLowerCase() || '';
+    const qLocal = document.getElementById("qLocal")?.value.trim().toLowerCase() || '';
+    const qContrato = document.getElementById("qContrato")?.value || '';
+    const qModalidade = document.getElementById("qModalidade")?.value || '';
+    const qArea = document.getElementById("qArea")?.value.trim().toLowerCase() || '';
+    const qExp = document.getElementById("qExp")?.value || '';
     const qSalMin = parseFloat(document.getElementById("qSalMin")?.value || 0);
-    const qSalMax = parseFloat(
-      document.getElementById("qSalMax")?.value || Infinity
-    );
+    const qSalMax = parseFloat(document.getElementById("qSalMax")?.value || Infinity);
 
     const results = jobs.filter((job) => {
       // Filtro de vaga (título ou descrição)
-      if (
-        qVaga &&
-        !`${job.title} ${job.description}`.toLowerCase().includes(qVaga)
-      ) {
+      if (qVaga && !`${job.title} ${job.description}`.toLowerCase().includes(qVaga)) {
         return false;
       }
-
+      
       // Filtro de localização
       if (qLocal && !job.location.toLowerCase().includes(qLocal)) {
         return false;
       }
-
+      
       // Filtro de contrato
       if (qContrato && job.contract !== qContrato) {
         return false;
       }
-
+      
       // Filtro de modalidade
       if (qModalidade && job.modality !== qModalidade) {
         return false;
       }
-
+      
       // Filtro de área
       if (qArea && !job.area.toLowerCase().includes(qArea)) {
         return false;
       }
-
+      
       // Filtro de experiência
       if (qExp && job.experience !== qExp) {
         return false;
       }
-
+      
       // Filtro de salário
       if (job.salary_max < qSalMin || job.salary_min > qSalMax) {
         return false;
       }
-
+      
       return true;
     });
 
     renderJobs(results);
-
+    
     // Scroll suave para os resultados
     if (jobsList) {
       jobsList.scrollIntoView({ behavior: "smooth", block: "nearest" });
@@ -337,20 +368,18 @@ if (jobsList) {
   jobsList.addEventListener("click", function (e) {
     const btn = e.target.closest(".btn-apply");
     if (!btn) return;
-
+    
     const id = btn.getAttribute("data-id");
     const job = jobs.find((j) => String(j.id) === String(id));
-
+    
     if (job) {
       // Adicionar animação ao botão
       btn.style.transform = "scale(0.95)";
       setTimeout(() => {
         btn.style.transform = "";
       }, 150);
-
-      alert(
-        `✅ Sua candidatura para "${job.title}" na ${job.company} foi registrada com sucesso!\n\nBoa sorte! Em breve a empresa entrará em contato.`
-      );
+      
+      alert(`✅ Sua candidatura para "${job.title}" na ${job.company} foi registrada com sucesso!\n\nBoa sorte! Em breve a empresa entrará em contato.`);
     }
   });
 }
@@ -367,9 +396,9 @@ renderJobs(jobs);
 })();
 
 /* ========== Intersection Observer - animações de entrada ========== */
-const observerOptions = {
-  threshold: 0.1,
-  rootMargin: "0px 0px -50px 0px",
+const observerOptions = { 
+  threshold: 0.1, 
+  rootMargin: "0px 0px -50px 0px" 
 };
 
 const observer = new IntersectionObserver((entries) => {
@@ -382,14 +411,12 @@ const observer = new IntersectionObserver((entries) => {
 }, observerOptions);
 
 // Observar elementos para animação
-document
-  .querySelectorAll(".feature-card, .team-member, .stat-card, .job-card")
-  .forEach((card) => {
-    card.style.opacity = "0";
-    card.style.transform = "translateY(20px)";
-    card.style.transition = "opacity 0.6s ease, transform 0.6s ease";
-    observer.observe(card);
-  });
+document.querySelectorAll(".feature-card, .team-member, .stat-card, .job-card").forEach((card) => {
+  card.style.opacity = "0";
+  card.style.transform = "translateY(20px)";
+  card.style.transition = "opacity 0.6s ease, transform 0.6s ease";
+  observer.observe(card);
+});
 
 /* ========== Carrossel da equipe ========== */
 (function teamCarousel() {
@@ -411,7 +438,7 @@ document
   function step() {
     if (autoScroll && teamTrack.scrollLeft !== undefined) {
       teamTrack.scrollLeft += speed;
-
+      
       // Loop infinito: quando chegar na metade, volta ao início
       if (teamTrack.scrollLeft >= teamTrack.scrollWidth / 2) {
         teamTrack.scrollLeft = 0;
@@ -431,7 +458,7 @@ document
 
   // Botões de navegação
   const scrollAmount = 280;
-
+  
   if (teamPrev) {
     teamPrev.addEventListener("click", () => {
       autoScroll = false;
@@ -439,7 +466,7 @@ document
       setTimeout(() => (autoScroll = true), 1000);
     });
   }
-
+  
   if (teamNext) {
     teamNext.addEventListener("click", () => {
       autoScroll = false;
@@ -453,24 +480,23 @@ document
     const start = elem.scrollLeft;
     const end = start + distance;
     const startTime = performance.now();
-
+    
     function animate(now) {
       const elapsed = now - startTime;
       const progress = Math.min(elapsed / duration, 1);
-
+      
       // Easing function (easeInOutQuad)
-      const easing =
-        progress < 0.5
-          ? 2 * progress * progress
-          : 1 - Math.pow(-2 * progress + 2, 2) / 2;
-
+      const easing = progress < 0.5 
+        ? 2 * progress * progress 
+        : 1 - Math.pow(-2 * progress + 2, 2) / 2;
+      
       elem.scrollLeft = start + (end - start) * easing;
-
+      
       if (progress < 1) {
         requestAnimationFrame(animate);
       }
     }
-
+    
     requestAnimationFrame(animate);
   }
 })();
@@ -480,20 +506,16 @@ document
 // Funções auxiliares de validação
 function showError(input, message) {
   if (!input) return;
-
-  const small = document.querySelector(
-    `.error-message[data-for="${input.id}"]`
-  );
+  
+  const small = document.querySelector(`.error-message[data-for="${input.id}"]`);
   if (small) small.textContent = message;
   input.classList.add("invalid");
 }
 
 function clearError(input) {
   if (!input) return;
-
-  const small = document.querySelector(
-    `.error-message[data-for="${input.id}"]`
-  );
+  
+  const small = document.querySelector(`.error-message[data-for="${input.id}"]`);
   if (small) small.textContent = "";
   input.classList.remove("invalid");
 }
@@ -514,14 +536,14 @@ const contactForm = document.getElementById("contactForm");
 if (contactForm) {
   contactForm.addEventListener("submit", function (e) {
     e.preventDefault();
-
+    
     const name = document.getElementById("contactName");
     const email = document.getElementById("contactEmail");
     const subject = document.getElementById("contactSubject");
     const message = document.getElementById("contactMessage");
 
     let valid = true;
-
+    
     // Limpar erros anteriores
     [name, email, subject, message].forEach(clearError);
 
@@ -616,10 +638,22 @@ if (loginForm) {
     submitBtn.disabled = true;
 
     setTimeout(() => {
-      alert("Login realizado com sucesso! (simulação)");
+      // Salvar dados do usuário no localStorage
+      const userData = {
+        email: email.value.trim(),
+        name: email.value.split('@')[0], // Simular nome baseado no email
+        isLoggedIn: true,
+        loginTime: new Date().toISOString()
+      };
+      localStorage.setItem('user', JSON.stringify(userData));
+
+      alert("Login realizado com sucesso!");
       loginForm.reset();
       submitBtn.textContent = originalText;
       submitBtn.disabled = false;
+
+      // Redirecionar para a página de perfil
+      window.location.href = 'html/perfil.html';
     }, 800);
   });
 }
@@ -629,14 +663,14 @@ const registerForm = document.getElementById("registerForm");
 if (registerForm) {
   registerForm.addEventListener("submit", function (e) {
     e.preventDefault();
-
+    
     const name = document.getElementById("fullName");
     const email = document.getElementById("regEmail");
     const phone = document.getElementById("regPhone");
     const password = document.getElementById("regPassword");
-
+    
     let valid = true;
-
+    
     // Limpar erros anteriores
     [name, email, phone, password].forEach(clearError);
 
@@ -685,9 +719,7 @@ if (registerForm) {
     submitBtn.disabled = true;
 
     setTimeout(() => {
-      alert(
-        "Cadastro realizado com sucesso! Verifique seu e-mail (simulação)."
-      );
+      alert("Cadastro realizado com sucesso! Verifique seu e-mail (simulação).");
       registerForm.reset();
       submitBtn.textContent = originalText;
       submitBtn.disabled = false;
@@ -701,19 +733,164 @@ document.querySelectorAll("input, textarea, select").forEach((el) => {
   el.addEventListener("focus", () => clearError(el));
 });
 
+/* ========== Profile page functionality ========== */
+function uploadResume() {
+  const fileInput = document.getElementById('resumeUpload');
+  const statusDiv = document.getElementById('resumeStatus');
+
+  if (!fileInput || !fileInput.files[0]) {
+    if (statusDiv) statusDiv.textContent = 'Por favor, selecione um arquivo.';
+    return;
+  }
+
+  const file = fileInput.files[0];
+  const allowedTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+
+  if (!allowedTypes.includes(file.type)) {
+    if (statusDiv) statusDiv.textContent = 'Tipo de arquivo não permitido. Use PDF, DOC ou DOCX.';
+    return;
+  }
+
+  if (file.size > 5 * 1024 * 1024) { // 5MB limit
+    if (statusDiv) statusDiv.textContent = 'Arquivo muito grande. Máximo 5MB.';
+    return;
+  }
+
+  // Simulate upload
+  if (statusDiv) statusDiv.textContent = 'Enviando...';
+
+  setTimeout(() => {
+    if (statusDiv) statusDiv.textContent = 'Currículo enviado com sucesso!';
+    statusDiv.style.color = 'green';
+  }, 1500);
+}
+
+/* ========== Profile form handlers ========== */
+const personalForm = document.getElementById('personalForm');
+if (personalForm) {
+  personalForm.addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    const name = document.getElementById('fullName');
+    const email = document.getElementById('email');
+    const phone = document.getElementById('phone');
+
+    let valid = true;
+
+    [name, email, phone].forEach(clearError);
+
+    if (!name.value.trim()) {
+      showError(name, 'Nome é obrigatório.');
+      valid = false;
+    }
+
+    if (!email.value.trim()) {
+      showError(email, 'Email é obrigatório.');
+      valid = false;
+    } else if (!validateEmail(email.value)) {
+      showError(email, 'Email inválido.');
+      valid = false;
+    }
+
+    if (!phone.value.trim()) {
+      showError(phone, 'Telefone é obrigatório.');
+      valid = false;
+    } else if (!validatePhone(phone.value)) {
+      showError(phone, 'Telefone inválido.');
+      valid = false;
+    }
+
+    if (valid) {
+      alert('Informações pessoais salvas com sucesso!');
+    }
+  });
+}
+
+const professionalForm = document.getElementById('professionalForm');
+if (professionalForm) {
+  professionalForm.addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    const profession = document.getElementById('profession');
+    const area = document.getElementById('area');
+    const salary = document.getElementById('salary');
+
+    let valid = true;
+
+    [profession, area, salary].forEach(clearError);
+
+    if (!profession.value.trim()) {
+      showError(profession, 'Profissão é obrigatória.');
+      valid = false;
+    }
+
+    if (!area.value.trim()) {
+      showError(area, 'Área de interesse é obrigatória.');
+      valid = false;
+    }
+
+    if (salary.value && parseFloat(salary.value) < 0) {
+      showError(salary, 'Salário deve ser positivo.');
+      valid = false;
+    }
+
+    if (valid) {
+      alert('Informações profissionais salvas com sucesso!');
+    }
+  });
+}
+
+const accountForm = document.getElementById('accountForm');
+if (accountForm) {
+  accountForm.addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    const currentPassword = document.getElementById('currentPassword');
+    const newPassword = document.getElementById('newPassword');
+    const confirmPassword = document.getElementById('confirmPassword');
+
+    let valid = true;
+
+    [currentPassword, newPassword, confirmPassword].forEach(clearError);
+
+    if (!currentPassword.value) {
+      showError(currentPassword, 'Senha atual é obrigatória.');
+      valid = false;
+    }
+
+    if (!newPassword.value) {
+      showError(newPassword, 'Nova senha é obrigatória.');
+      valid = false;
+    } else if (newPassword.value.length < 6) {
+      showError(newPassword, 'Nova senha deve ter pelo menos 6 caracteres.');
+      valid = false;
+    }
+
+    if (!confirmPassword.value) {
+      showError(confirmPassword, 'Confirmação de senha é obrigatória.');
+      valid = false;
+    } else if (newPassword.value !== confirmPassword.value) {
+      showError(confirmPassword, 'Senhas não coincidem.');
+      valid = false;
+    }
+
+    if (valid) {
+      alert('Senha alterada com sucesso!');
+      accountForm.reset();
+    }
+  });
+}
+
 /* ========== Scroll reveal para seções ========== */
 const sections = document.querySelectorAll("section");
-const sectionObserver = new IntersectionObserver(
-  (entries) => {
-    entries.forEach((entry) => {
-      if (entry.isIntersecting) {
-        entry.target.style.opacity = "1";
-        entry.target.style.transform = "translateY(0)";
-      }
-    });
-  },
-  { threshold: 0.05 }
-);
+const sectionObserver = new IntersectionObserver((entries) => {
+  entries.forEach((entry) => {
+    if (entry.isIntersecting) {
+      entry.target.style.opacity = "1";
+      entry.target.style.transform = "translateY(0)";
+    }
+  });
+}, { threshold: 0.05 });
 
 sections.forEach((section) => {
   if (!section.classList.contains("hero")) {
@@ -725,22 +902,21 @@ sections.forEach((section) => {
 });
 
 /* ========== Smooth scroll para todos os links internos ========== */
-document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
-  anchor.addEventListener("click", function (e) {
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+  anchor.addEventListener('click', function (e) {
     e.preventDefault();
-    const targetId = this.getAttribute("href");
-    if (targetId === "#") return;
-
+    const targetId = this.getAttribute('href');
+    if (targetId === '#') return;
+    
     const target = document.querySelector(targetId);
     if (target) {
       const headerOffset = 80;
       const elementPosition = target.getBoundingClientRect().top;
-      const offsetPosition =
-        elementPosition + window.pageYOffset - headerOffset;
+      const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
 
       window.scrollTo({
         top: offsetPosition,
-        behavior: "smooth",
+        behavior: 'smooth'
       });
     }
   });
@@ -748,38 +924,46 @@ document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
 
 /* ========== Adicionar classe active ao menu atual ========== */
 function updateActiveNavLink() {
-  const sections = document.querySelectorAll("section[id]");
+  const sections = document.querySelectorAll('section[id]');
   const navLinks = document.querySelectorAll('.nav-links a[href^="#"]');
+  const bottomNavLinks = document.querySelectorAll('.bottom-nav-item[href^="#"]');
 
-  let current = "";
+  let current = '';
 
-  sections.forEach((section) => {
+  sections.forEach(section => {
     const sectionTop = section.offsetTop;
     const sectionHeight = section.clientHeight;
-    if (pageYOffset >= sectionTop - 150) {
-      current = section.getAttribute("id");
+    if (pageYOffset >= (sectionTop - 150)) {
+      current = section.getAttribute('id');
     }
   });
 
-  navLinks.forEach((link) => {
-    link.classList.remove("active");
-    if (link.getAttribute("href") === `#${current}`) {
-      link.classList.add("active");
+  navLinks.forEach(link => {
+    link.classList.remove('active');
+    if (link.getAttribute('href') === `#${current}`) {
+      link.classList.add('active');
+    }
+  });
+
+  bottomNavLinks.forEach(link => {
+    link.classList.remove('active');
+    if (link.getAttribute('href') === `#${current}`) {
+      link.classList.add('active');
     }
   });
 }
 
-window.addEventListener("scroll", updateActiveNavLink);
-window.addEventListener("load", updateActiveNavLink);
+window.addEventListener('scroll', updateActiveNavLink);
+window.addEventListener('load', updateActiveNavLink);
 
 /* ========== Animação de números (contador) ========== */
 function animateCounter(element, target, duration = 2000) {
   if (!element) return;
-
+  
   const start = 0;
   const increment = target / (duration / 16);
   let current = start;
-
+  
   const timer = setInterval(() => {
     current += increment;
     if (current >= target) {
@@ -792,97 +976,172 @@ function animateCounter(element, target, duration = 2000) {
 }
 
 // Animar contador quando visível
-const statObserver = new IntersectionObserver(
-  (entries) => {
-    entries.forEach((entry) => {
-      if (entry.isIntersecting && !entry.target.dataset.animated) {
-        const target = parseInt(entry.target.textContent.replace(/\D/g, ""));
-        animateCounter(entry.target, target);
-        entry.target.dataset.animated = "true";
-      }
-    });
-  },
-  { threshold: 0.5 }
-);
+const statObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting && !entry.target.dataset.animated) {
+      const target = parseInt(entry.target.textContent.replace(/\D/g, ''));
+      animateCounter(entry.target, target);
+      entry.target.dataset.animated = 'true';
+    }
+  });
+}, { threshold: 0.5 });
 
-document.querySelectorAll(".stat-number").forEach((stat) => {
+document.querySelectorAll('.stat-number').forEach(stat => {
   statObserver.observe(stat);
 });
 
-console.log("✅ Vagas ETE carregado com sucesso!");
-console.log(`📊 ${jobs.length} vagas disponíveis`);
-console.log("🎨 Tema atual:", window.currentTheme || "light");
+/* ========== Profile page initialization ========== */
+(function initProfilePage() {
+  // Check if user is logged in
+  const userData = JSON.parse(localStorage.getItem('user') || 'null');
 
-// Script para carrossel infinito automático
-document.addEventListener("DOMContentLoaded", function () {
-  const track = document.getElementById("teamTrack");
-  const prevBtn = document.getElementById("teamPrev");
-  const nextBtn = document.getElementById("teamNext");
-  const items = Array.from(track.children);
-  const itemCount = items.length;
-  const itemWidth = items[0].offsetWidth + 32; // Incluindo margens
-  let currentIndex = 0;
-  let intervalId;
+  if (!userData || !userData.isLoggedIn) {
+    // Redirect to main page if not logged in
+    if (window.location.pathname.includes('perfil.html')) {
+      window.location.href = '../index.html#entrar';
+      return;
+    }
+  } else {
+    // Populate profile data
+    const userName = document.getElementById('userName');
+    const userEmail = document.getElementById('userEmail');
 
-  // Clonar itens para efeito infinito
-  items.forEach((item) => {
-    const clone = item.cloneNode(true);
-    track.appendChild(clone);
-  });
-  items.forEach((item) => {
-    const clone = item.cloneNode(true);
-    track.prepend(clone);
-  });
+    if (userName) userName.textContent = userData.name || 'Usuário';
+    if (userEmail) userEmail.textContent = userData.email;
 
-  // Ajustar posição inicial
-  track.style.transform = `translateX(${-itemWidth * itemCount}px)`;
+    // Populate form fields with stored data
+    const fullName = document.getElementById('fullName');
+    const email = document.getElementById('email');
 
-  function moveCarousel(direction) {
-    currentIndex += direction;
-    track.style.transition = "transform 0.5s ease-in-out";
-    track.style.transform = `translateX(${
-      -itemWidth * (currentIndex + itemCount)
-    }px)`;
+    if (fullName && userData.fullName) fullName.value = userData.fullName;
+    if (email) email.value = userData.email;
 
-    setTimeout(() => {
-      if (currentIndex >= itemCount) {
-        track.style.transition = "none";
-        currentIndex = 0;
-        track.style.transform = `translateX(${-itemWidth * itemCount}px)`;
-      } else if (currentIndex < 0) {
-        track.style.transition = "none";
-        currentIndex = itemCount - 1;
-        track.style.transform = `translateX(${
-          -itemWidth * (itemCount * 2 - 1)
-        }px)`;
-      }
-    }, 500);
+    // Load additional profile data if exists
+    const phone = document.getElementById('phone');
+    const location = document.getElementById('location');
+    const profession = document.getElementById('profession');
+    const experience = document.getElementById('experience');
+    const area = document.getElementById('area');
+    const salary = document.getElementById('salary');
+
+    if (phone && userData.phone) phone.value = userData.phone;
+    if (location && userData.location) location.value = userData.location;
+    if (profession && userData.profession) profession.value = userData.profession;
+    if (experience && userData.experience) experience.value = userData.experience;
+    if (area && userData.area) area.value = userData.area;
+    if (salary && userData.salary) salary.value = userData.salary;
   }
+})();
 
-  // Auto-scroll a cada 3 segundos
-  function autoScroll() {
-    moveCarousel(1);
+/* ========== Logout functionality ========== */
+function logout() {
+  localStorage.removeItem('user');
+  window.location.href = '../index.html';
+}
+
+// Handle logout link click
+document.addEventListener('click', function(e) {
+  if (e.target.closest('a[href="#sair"]') || e.target.closest('a[href*="sair"]')) {
+    e.preventDefault();
+    logout();
   }
-
-  intervalId = setInterval(autoScroll, 3000);
-
-  // Botões manuais
-  nextBtn.addEventListener("click", () => {
-    clearInterval(intervalId);
-    moveCarousel(1);
-    intervalId = setInterval(autoScroll, 3000);
-  });
-
-  prevBtn.addEventListener("click", () => {
-    clearInterval(intervalId);
-    moveCarousel(-1);
-    intervalId = setInterval(autoScroll, 3000);
-  });
-
-  // Pausar no hover
-  track.addEventListener("mouseenter", () => clearInterval(intervalId));
-  track.addEventListener(
-    "mouseleave",
-    () => (intervalId = setInterval(autoScroll, 3000))
-  );
 });
+
+/* ========== Update profile form handlers to save to localStorage ========== */
+if (personalForm) {
+  personalForm.addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    const name = document.getElementById('fullName');
+    const email = document.getElementById('email');
+    const phone = document.getElementById('phone');
+    const location = document.getElementById('location');
+
+    let valid = true;
+
+    [name, email, phone].forEach(clearError);
+
+    if (!name.value.trim()) {
+      showError(name, 'Nome é obrigatório.');
+      valid = false;
+    }
+
+    if (!email.value.trim()) {
+      showError(email, 'Email é obrigatório.');
+      valid = false;
+    } else if (!validateEmail(email.value)) {
+      showError(email, 'Email inválido.');
+      valid = false;
+    }
+
+    if (!phone.value.trim()) {
+      showError(phone, 'Telefone é obrigatório.');
+      valid = false;
+    } else if (!validatePhone(phone.value)) {
+      showError(phone, 'Telefone inválido.');
+      valid = false;
+    }
+
+    if (valid) {
+      // Save to localStorage
+      const userData = JSON.parse(localStorage.getItem('user') || '{}');
+      userData.fullName = name.value.trim();
+      userData.email = email.value.trim();
+      userData.phone = phone.value.trim();
+      userData.location = location.value.trim();
+      localStorage.setItem('user', JSON.stringify(userData));
+
+      // Update display name
+      const userName = document.getElementById('userName');
+      if (userName) userName.textContent = name.value.trim();
+
+      alert('Informações pessoais salvas com sucesso!');
+    }
+  });
+}
+
+if (professionalForm) {
+  professionalForm.addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    const profession = document.getElementById('profession');
+    const experience = document.getElementById('experience');
+    const area = document.getElementById('area');
+    const salary = document.getElementById('salary');
+
+    let valid = true;
+
+    [profession, area, salary].forEach(clearError);
+
+    if (!profession.value.trim()) {
+      showError(profession, 'Profissão é obrigatória.');
+      valid = false;
+    }
+
+    if (!area.value.trim()) {
+      showError(area, 'Área de interesse é obrigatória.');
+      valid = false;
+    }
+
+    if (salary.value && parseFloat(salary.value) < 0) {
+      showError(salary, 'Salário deve ser positivo.');
+      valid = false;
+    }
+
+    if (valid) {
+      // Save to localStorage
+      const userData = JSON.parse(localStorage.getItem('user') || '{}');
+      userData.profession = profession.value.trim();
+      userData.experience = experience.value;
+      userData.area = area.value.trim();
+      userData.salary = salary.value;
+      localStorage.setItem('user', JSON.stringify(userData));
+
+      alert('Informações profissionais salvas com sucesso!');
+    }
+  });
+}
+
+console.log('✅ Vagas ETE carregado com sucesso!');
+console.log(`📊 ${jobs.length} vagas disponíveis`);
+console.log('🎨 Tema atual:', window.currentTheme || 'light');
